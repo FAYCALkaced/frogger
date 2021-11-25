@@ -5,6 +5,7 @@ import java.util.Random;
 
 import graphicalElements.Element;
 import graphicalElements.IFroggerGraphics;
+import util.Case;
 
 public class Game {
 
@@ -76,8 +77,15 @@ public class Game {
 	 * @return true si le partie est perdue
 	 */
 	public boolean testLose() {
-		// TODO
-		return false;
+		// Optention de la position de la grenuille
+		Case frogPosition = this.frog.getPosition();
+		// Tester si la position est non "safe"
+		if (!this.environment.isSafe(frogPosition)) {
+			this.graphic.endGameScreen("You lose");
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -87,8 +95,15 @@ public class Game {
 	 * @return true si la partie est gagnée
 	 */
 	public boolean testWin() {
-		// TODO
-		return false;
+		// Optention de la position de la grenuille
+		Case frogPosition = this.frog.getPosition();
+		// Tester si la position est "winningPosition"
+		if (this.environment.isWinningPosition(frogPosition)) {
+			this.graphic.endGameScreen("You win");
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -98,7 +113,7 @@ public class Game {
 	public void update() {
 		graphic.clear();
 		environment.update();
-		this.graphic.add(new Element(frog.getPosition(), Color.GREEN));
+		this.graphic.add(new Element(frog.getPosition(), Color.yellow));
 		testLose();
 		testWin();
 	}
