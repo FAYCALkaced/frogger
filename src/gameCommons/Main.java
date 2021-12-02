@@ -10,7 +10,6 @@ import givenEnvironment.GivenEnvironment;
 import graphicalElements.FroggerGraphic;
 import graphicalElements.IFroggerGraphics;
 import util.Case;
-import util.Direction;
 
 public class Main {
 
