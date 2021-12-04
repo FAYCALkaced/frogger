@@ -113,7 +113,7 @@ public class Game {
 	public void update() {
 		graphic.clear();
 		environment.update();
-		this.graphic.add(new Element(frog.getPosition(), Color.yellow));
+		this.graphic.add(new Element(frog.getPosition(), Color.BLUE));
 		testLose();
 		testWin();
 	}
