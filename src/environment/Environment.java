@@ -33,8 +33,8 @@ public class Environment implements IEnvironment {
     }
 
     @Override
-    public boolean isWinningPosition(Case c) {
-        if (this.game.height == c.ord + 1) {
+    public boolean isWinningPosition(Case frogPosition) {
+        if (this.game.height == frogPosition.ord + 1) {
             return true;
         }
         return false;
@@ -46,5 +46,10 @@ public class Environment implements IEnvironment {
             lane.setTempo(lane.getTempo() + 1);
             lane.update();
         }
+    }
+
+    @Override
+    public void addNewLane() {
+        // TODO
     }
 }

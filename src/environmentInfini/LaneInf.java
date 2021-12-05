@@ -1,13 +1,13 @@
-package environment;
+package environmentInfini;
 
 import gameCommons.Game;
 import util.Case;
 
 import java.util.ArrayList;
 
-public class Lane {
+public class LaneInf {
     private Game game;
-    private ArrayList<Car> cars;
+    private ArrayList<CarInf> cars;
 
     private int ord;
     private int speed;
@@ -15,20 +15,20 @@ public class Lane {
     private double density;
     private int tempo;
 
-    public Lane(Game game, int laneOrd) {
+    public LaneInf(Game game, int laneOrd) {
         this.game = game;
         this.ord = laneOrd;
-        // Initialisation avec une vitesse alÈatoire entre 1 et 3
+        // Initialisation avec une vitesse al√©atoire entre 1 et game.minSpeedInTimerLoops
         this.speed = game.randomGen.nextInt(game.minSpeedInTimerLoops - 1) + 1;
-        // Initialisation avec un sens alÈatoire des cars
+        this.cars = new ArrayList();
+        // Initialisation avec un sens al√©atoire des cars
         this.leftToRight = game.randomGen.nextBoolean();
-        // density = 0 pour la premiere et derniere ligne
-        if (laneOrd == 0 || game.height - 1 == laneOrd) {
+        // density = 0 pour la premiere et deuxi√®me ligne
+        if (laneOrd == 0 || laneOrd == 1) {
             this.density = 0;
         } else {
             this.density = game.defaultDensity;
         }
-        this.cars = new ArrayList();
         this.addCars();
     }
 
@@ -36,46 +36,40 @@ public class Lane {
         // Faire bouger les cars pour pouvoir ajouter de nouvelles cars
         for (int i = 0; i < game.height; ++i) {
             this.mayAddCar();
+            this.moveCars();
         }
     }
 
     private void moveCars() {
-        for (Car car : this.cars) {
+        for (CarInf car : this.cars) {
             car.move();
         }
     }
 
-    private void addCarsToGraphics() {
-        for (Car car : this.cars) {
-            car.addToGraphics();
+    private void addCarsToGraphics(int linePosition){
+        for (CarInf car : this.cars) {
+            car.addToGraphics(linePosition);
         }
     }
 
-    public void update() {
+    public void update(int linePosition) {
         if (this.tempo > this.speed) {
+            this.moveCars();
             this.mayAddCar();
-            this.addCarsToGraphics();
+            this.addCarsToGraphics(linePosition);
             this.tempo = 0;
         } else {
-            addCarsToGraphics();
+            addCarsToGraphics(linePosition);
         }
     }
 
     boolean isSafe(Case position) {
-        for (Car car : this.cars) {
+        for (CarInf car : this.cars) {
             if (!car.isSafe(position)) {
                 return false;
             }
         }
         return true;
-    }
-
-    public int getTempo() {
-        return tempo;
-    }
-
-    public void setTempo(int tempo) {
-        this.tempo = tempo;
     }
 
     // TODO : ajout de methodes
@@ -91,7 +85,7 @@ public class Lane {
     private void mayAddCar() {
         if (this.isSafe(getFirstCase()) && this.isSafe(getBeforeFirstCase())) {
             if (game.randomGen.nextDouble() < density) {
-                cars.add(new Car(game, getBeforeFirstCase(), leftToRight));
+                cars.add(new CarInf(game, getBeforeFirstCase(), leftToRight));
             }
         }
     }
@@ -108,5 +102,13 @@ public class Lane {
             return new Case(-1, ord);
         } else
             return new Case(game.width, ord);
+    }
+
+    public int getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(int tempo) {
+        this.tempo = tempo;
     }
 }

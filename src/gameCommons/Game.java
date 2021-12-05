@@ -17,10 +17,11 @@ public class Game {
 	public final int minSpeedInTimerLoops;
 	public final double defaultDensity;
 
-	// Lien aux objets utilisés
+	// Lien aux objets utilisï¿½s
 	private IEnvironment environment;
 	private IFrog frog;
 	private IFroggerGraphics graphic;
+	long startTime;
 
 	/**
 	 *
@@ -31,7 +32,7 @@ public class Game {
 	 * @param height
 	 *            hauteur en cases
 	 * @param minSpeedInTimerLoop
-	 *            Vitesse minimale, en nombre de tour de timer avant déplacement
+	 *            Vitesse minimale, en nombre de tour de timer avant dï¿½placement
 	 * @param defaultDensity
 	 *            densite de voiture utilisee par defaut pour les routes
 	 */
@@ -42,10 +43,11 @@ public class Game {
 		this.height = height;
 		this.minSpeedInTimerLoops = minSpeedInTimerLoop;
 		this.defaultDensity = defaultDensity;
+		this.startTime = System.currentTimeMillis();
 	}
 
 	/**
-	 * Lie l'objet frog à la partie
+	 * Lie l'objet frog ï¿½ la partie
 	 *
 	 * @param frog
 	 */
@@ -71,7 +73,7 @@ public class Game {
 	}
 
 	/**
-	 * Teste si la partie est perdue et lance un écran de fin approprié si tel
+	 * Teste si la partie est perdue et lance un ï¿½cran de fin appropriï¿½ si tel
 	 * est le cas
 	 *
 	 * @return true si le partie est perdue
@@ -81,7 +83,11 @@ public class Game {
 		Case frogPosition = this.frog.getPosition();
 		// Tester si la position est non "safe"
 		if (!this.environment.isSafe(frogPosition)) {
-			this.graphic.endGameScreen("You lose");
+			String message = "You lose";
+			message += ", your score: " + this.frog.getScore();
+			message += "\n time: " + (System.currentTimeMillis() - startTime)/1000;
+
+			this.graphic.endGameScreen(message);
 			return true;
 		} else {
 			return false;
@@ -89,10 +95,10 @@ public class Game {
 	}
 
 	/**
-	 * Teste si la partie est gagnee et lance un écran de fin approprié si tel
+	 * Teste si la partie est gagnee et lance un ï¿½cran de fin appropriï¿½ si tel
 	 * est le cas
 	 *
-	 * @return true si la partie est gagnée
+	 * @return true si la partie est gagnï¿½e
 	 */
 	public boolean testWin() {
 		// Optention de la position de la grenuille
@@ -113,9 +119,14 @@ public class Game {
 	public void update() {
 		graphic.clear();
 		environment.update();
-		this.graphic.add(new Element(frog.getPosition(), Color.BLUE));
-		testLose();
-		testWin();
+		this.graphic.add(new Element(new Case(frog.getPosition().absc, 1), Color.BLUE));
 	}
 
+	public void addNewLane() {
+		this.environment.addNewLane();
+	}
+
+	public IFrog getFrog() {
+		return frog;
+	}
 }

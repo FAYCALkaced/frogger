@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import environment.Environment;
-import frog.Frog;
+import environmentInfini.EnvInf;
+import environmentInfini.FrogInf;
 import graphicalElements.FroggerGraphic;
 import graphicalElements.IFroggerGraphics;
 import util.Case;
@@ -15,24 +15,24 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		//Caractéristiques du jeu
+		//Caractï¿½ristiques du jeu
 		int width = 26;
 		int height = 20;
 		int tempo = 100;
 		int minSpeedInTimerLoops = 3;
 		double defaultDensity = 0.2;
 
-		//Création de l'interface graphique
+		//Crï¿½ation de l'interface graphique
 		IFroggerGraphics graphic = new FroggerGraphic(width, height);
-		//Création de la partie
+		//Crï¿½ation de la partie
 		Game game = new Game(graphic, width, height, minSpeedInTimerLoops, defaultDensity);
-		//Création et liason de la grenouille
-		Case startingCase = new Case(width / 2, 0);
-		IFrog frog = new Frog(startingCase, game);
+		//Crï¿½ation et liason de la grenouille
+		Case startingCase = new Case(width / 2, 1);
+		IFrog frog = new FrogInf(startingCase, game);
 		game.setFrog(frog);
 		graphic.setFrog(frog);
-		//Création et liaison de l'environnement
-		IEnvironment env = new Environment(game);
+		//Crï¿½ation et liaison de l'environnement
+		IEnvironment env = new EnvInf(game);
 		game.setEnvironment(env);
 
 		//Boucle principale : l'environnement s'acturalise tous les tempo milisecondes
@@ -40,6 +40,10 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				game.update();
+				// test si frogger lose stop la game
+				if(game.testLose() == true) {
+					((Timer)e.getSource()).stop();
+				}
 				graphic.repaint();
 			}
 		});

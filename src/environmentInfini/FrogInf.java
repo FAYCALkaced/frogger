@@ -1,19 +1,21 @@
-package frog;
+package environmentInfini;
 
 import gameCommons.Game;
 import gameCommons.IFrog;
 import util.Case;
 import util.Direction;
 
-public class Frog implements IFrog {
+public class FrogInf implements IFrog {
 
     private Case position;
     private Game game;
+    private int score;
 
     // Initialisation des attributs
-    public Frog(Case position, Game game) {
+    public FrogInf(Case position, Game game) {
         this.position = position;
         this.game = game;
+        this.score = 0;
     }
 
     @Override
@@ -26,18 +28,6 @@ public class Frog implements IFrog {
         return null;
     }
 
-    public void setPosition(Case position) {
-        this.position = position;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
     // Implementation de la methode move pour definir les strategis de deplacement du frog
     public void move(Direction newDirection) {
         // Strategie de positionnement en cas de deplacement
@@ -45,15 +35,18 @@ public class Frog implements IFrog {
             this.position = new Case(this.position.absc + 1, this.position.ord);
         } else if (newDirection == Direction.left && this.position.absc > 0) {
             this.position = new Case(this.position.absc - 1, this.position.ord);
-        } else if (newDirection == Direction.up && this.position.ord + 1 < this.game.height) {
+        } else if (newDirection == Direction.up) {
             this.position = new Case(this.position.absc, this.position.ord + 1);
-        } else if (newDirection == Direction.down && this.position.ord > 0) {
+            score++;
+            this.game.addNewLane();
+        } else if (newDirection == Direction.down && this.position.ord > 1) {
             this.position = new Case(this.position.absc, this.position.ord - 1);
+            score--;
         }
     }
 
     @Override
     public int getScore() {
-        return 0;
+        return score;
     }
 }
